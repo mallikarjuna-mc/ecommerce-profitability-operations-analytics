@@ -2,7 +2,9 @@
 
 An end-to-end data analytics project focused on understanding e-commerce revenue, profitability, customer performance, product performance, returns, and operational data quality.
 
-The project combines MySQL for data preparation and analysis with Power BI for interactive business reporting and dashboard development.
+The project combines MySQL for data preparation and analysis with Power BI and DAX for interactive business reporting and dashboard development.
+
+---
 
 ## Project Overview
 
@@ -19,6 +21,8 @@ The analysis focuses on:
 - Data quality validation
 - Business recommendations
 
+---
+
 ## Business Questions
 
 The project answers the following business questions:
@@ -34,6 +38,8 @@ The project answers the following business questions:
 9. How do order statuses and payment methods contribute to revenue?
 10. Are there any data-quality issues affecting the analysis?
 11. Which areas require management attention?
+
+---
 
 ## Dataset
 
@@ -57,19 +63,26 @@ The project uses six relational tables:
 | Order Items | 15,000 |
 | Returns | 1,176 |
 
+---
+
 ## Data Model
 
-The project follows a relational data model.
+The project follows a relational data model connecting dimension and fact tables.
 
-Categories → Products  
-Customers → Orders  
-Orders → Order Items  
-Products → Order Items  
-Order Items → Returns
+Core relationships include:
+
+- Categories → Products
+- Customers → Orders
+- Orders → Order Items
+- Products → Order Items
+- Order Items → Returns
+- Date → Orders / Order Items
 
 Detailed data-model documentation is available in:
 
 `Documentation/Data_Model.md`
+
+---
 
 ## Tools & Technologies
 
@@ -114,6 +127,8 @@ Used for:
 - Portfolio presentation
 - Sharing SQL and analytical work
 
+---
+
 ## SQL Analysis
 
 The SQL analysis is organized into the following sections:
@@ -150,6 +165,8 @@ The SQL analysis is organized into the following sections:
 SQL portfolio file:
 
 `SQL/ECommerce_Analytics_SQL_Portfolio.sql`
+
+---
 
 ## Power BI Dashboards
 
@@ -200,14 +217,18 @@ Key analysis includes:
 - Payment analysis
 - Data-quality observations
 
+---
+
 ## Key KPIs
+
+The following KPIs were validated during the MySQL and Power BI analysis.
 
 | KPI | Validated Value |
 |---|---:|
 | Total Revenue | ₹1.286B |
 | Total Cost | ₹958.123M |
 | Total Profit | ₹328.183M |
-| Profit Margin | ~25.51% |
+| Profit Margin | 25.51% |
 | Total Orders | 9,000 |
 | Orders with Items | 7,342 |
 | Total Customers | 5,000 |
@@ -216,9 +237,17 @@ Key analysis includes:
 | Returned Orders | 1,176 |
 | Return Rate | 13.07% |
 
+### KPI Calculation Consideration
+
+Because 1,658 orders do not have corresponding order-item records, Average Order Value and Profit per Order are calculated using **Orders with Items (7,342)** as the denominator.
+
+This avoids treating orders without item-level revenue or cost information as complete transactions.
+
 Detailed KPI definitions and DAX measures are available in:
 
 `Documentation/KPI_Definitions.md`
+
+---
 
 ## Key Business Insights
 
@@ -232,7 +261,7 @@ Food & Beverages generated approximately ₹67M in total profit, making it the h
 
 ### Apparel/Fashion Has the Highest Category Margin
 
-Apparel/Fashion achieved the highest category profit margin at 26.92%.
+Apparel/Fashion achieved the highest category profit margin at approximately 26.92%.
 
 ### Apparel/Fashion Also Has the Highest Return Rate
 
@@ -259,21 +288,27 @@ Products with high returned-order counts include:
 
 The dataset contains 9,000 orders but only 7,342 orders with corresponding order-item records.
 
-This leaves 1,658 orders without order-item records.
+This leaves:
+
+**1,658 orders without order-item records.**
 
 The missing-item orders include:
 
-- Cancelled — 580
-- In Transit — 550
-- Delivered — 528
+| Order Status | Orders Without Items |
+|---|---:|
+| Cancelled | 580 |
+| In Transit | 550 |
+| Delivered | 528 |
 
-The 528 delivered orders without corresponding order-item records require particular investigation.
+The 528 delivered orders without corresponding order-item records require particular investigation because delivered orders would normally be expected to have associated item-level records.
+
+---
 
 ## Business Recommendations
 
 ### 1. Investigate High-Return Products
 
-Prioritize products and categories with high return activity.
+Prioritize products and categories with high return activity to identify potential product, quality, sizing, pricing, or customer-experience issues.
 
 ### 2. Investigate Data Completeness
 
@@ -281,7 +316,7 @@ Review the source-system or ETL process responsible for missing order-item recor
 
 ### 3. Protect High-Margin Categories
 
-Monitor pricing, product mix and cost structure in high-margin categories.
+Monitor pricing, product mix, and cost structure in high-margin categories.
 
 ### 4. Monitor Returns Alongside Profitability
 
@@ -291,13 +326,24 @@ Evaluate profit margin and return performance together when assessing category p
 
 Introduce validation checks to identify orders without corresponding order-item records.
 
+---
+
 ## Data Quality Consideration
 
 Revenue and profitability analysis is based on order-item level data.
 
-Because 1,658 orders do not have corresponding order-item records, metrics such as Average Order Value and Profit per Order use Orders with Items as their denominator.
+Because 1,658 orders do not have corresponding order-item records, metrics such as:
+
+- Average Order Value
+- Profit per Order
+
+use **Orders with Items (7,342)** as the denominator.
 
 This distinction was identified during the final MySQL and Power BI validation process.
+
+The data-quality issue should therefore be considered when interpreting order-level profitability metrics.
+
+---
 
 ## Analytical Limitations
 
@@ -309,39 +355,45 @@ Similarly, the dataset identifies missing order-item relationships but does not 
 
 Further investigation would be required to determine the root cause.
 
+---
+
 ## Project Structure
 
+```text
 E-Commerce-Profitability-Operations-Analytics
+│
+├── README.md
+│
+├── Data
+│   ├── categories.csv
+│   ├── customers.csv
+│   ├── products.csv
+│   ├── orders.csv
+│   ├── order_items.csv
+│   └── returns.csv
+│
+├── Documentation
+│   ├── Data_Model.md
+│   ├── KPI_Definitions.md
+│   └── Business_Insights.md
+│
+├── Power BI
+│   └── ECommerce_Profitability_Operations_Analytics.pbix
+│
+├── Screenshots
+│   ├── 01_Executive_Overview.png
+│   ├── 02_Profitability_Analysis.png
+│   ├── 03_Operations_Returns_Analysis.png
+│   └── 04_PowerBI_Data_Model.png
+│
+└── SQL
+    └── ECommerce_Analytics_SQL_Portfolio.sql
 
-- README.md
-- PowerBI/
-  - ECommerce_Profitability_Operations_Analytics.pbix
-- SQL/
-  - ECommerce_Analytics_SQL_Portfolio.sql
-- Documentation/
-  - Data_Model.md
-  - KPI_Definitions.md
-  - Business_Insights.md
-- Screenshots/
-  Screenshots/
-  - 01_Executive_Overview.png
-  - 02_Profitability_Analysis.png
-  - 03_Operations_Returns_Analysis.png
-  - 04_PowerBI_Data_Model.png
-- Data/
+## Author
 
-## Documentation
+**Mallikarjun M.C**
 
-Detailed project documentation:
+Aspiring Data Analyst with a business background and hands-on experience in SQL, MySQL, Power BI, DAX, and Excel.
 
-- `Documentation/Data_Model.md`
-- `Documentation/KPI_Definitions.md`
-- `Documentation/Business_Insights.md`
-
-## Project Outcome
-
-This project demonstrates an end-to-end analytics workflow:
-
-Raw Data → MySQL Database → Data Validation → SQL Analysis → Power BI Data Model → DAX Measures → Interactive Dashboards → Business Insights → Recommendations
-
-The project demonstrates practical skills in SQL, Power BI, DAX, data validation, business analysis, dashboard development and analytical storytelling.
+- **GitHub:** [mallikarjuna-mc](https://github.com/mallikarjuna-mc)
+- **LinkedIn:** [Mallikarjun M.C](https://www.linkedin.com/in/mallikarjunamc/)
